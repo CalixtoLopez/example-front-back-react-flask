@@ -30,16 +30,27 @@ class Account(db.Model):
             "money" : str(self.money)
             # do not serialize the password, its a security breach
         }
+    #Metodo para sacar todos los clientes
+    @classmethod
+    def get_all(cls):
+        accounts = cls.query.all()
+        return accounts
+    
     #Creamos un get para sacar los datos de Account
     @classmethod
     def get_by_id(cls, id):
-        account = cls.query.get(id)
+        account = cls.query.filter_by(id=id).one_or_none()
         return account
 
     # Nos creamos l funcion crear cuenta
     def create(self):
         db.session.add(self)
         db.session.commit()
+    #Editar los datos id
+    def edit_client(self, **kwargs):
+        for key,value in kwargs.items():
+            
+
 
 
 
@@ -66,6 +77,10 @@ class Client(db.Model):
     def create(self):
         db.session.add(self)
         db.session.commit()
+    
+    
+
+
 
 
 

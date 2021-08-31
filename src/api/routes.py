@@ -8,6 +8,7 @@ from sqlalchemy import exc
 from api.models import db, Account, Client
 from api.utils import generate_sitemap, APIException
 
+
 api = Blueprint('api', __name__)
 
 
@@ -24,7 +25,47 @@ def handle_hello():
 ## Si queremos una cuenta no creamos el POST de una cuenta
 ## En este caso podemos poner account pero es mas sencilo con '/client' or '/business'
 
-@api.route('/client', methods=['POST'])
+@api.route('/client/<int:id>', methods=['PUT'])
+#@jwt_required() ## requiere instalacion
+def edit_client(id):
+    current_client=account.id
+    
+    new_info = { 
+        'email' : request.json.get('email', None)
+        #money = request.json.get('money', None)
+        'password' : request.json.get('password', None)
+        'nick' : request.json.get('nick', None)
+    }
+    account = Account.get_by_id(id)
+    if client:
+        update_client =
+  
+
+@api.route('/client/', methods=['GET'])
+def get_client_all():
+    accounts = Account.get_all()
+    if accounts:
+        accounts_to_dict = [account.to_dict() for account in accounts ]
+        return jsonify(accounts_to_dict), 200 
+    return jsonify({'error': 'Accounts no fount¡¡¡¡'}), 404
+
+@api.route('/client/<int:id>', methods=['GET'])
+def get_client_id(id):
+    account = Account.get_by_id(id)
+    if account:
+        account_id = account.to_dict()
+        return jsonify(account_id), 200 
+    return jsonify({'error': 'Account no fount¡¡¡¡'}), 404
+
+@api.route('/client/<int:id>', methods=['PUT'])
+def get_client_id(id):
+    account = Account.get_by_id(id)
+    if account:
+        account_id = account.to_dict()
+        return jsonify(account_id), 200 
+    return jsonify({'error': 'Account no fount¡¡¡¡'}), 404
+
+@api.route('/client/', methods=['POST'])
 def create_client():
     # Lo que tenemos que hacer es lo que nos envia el body es dicer el fecth
     # Podemosa palicar esta propiedad de python a, b = 1, 2
