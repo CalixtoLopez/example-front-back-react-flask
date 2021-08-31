@@ -27,9 +27,21 @@ class Account(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "money" : self.money
+            "money" : str(self.money)
             # do not serialize the password, its a security breach
         }
+    #Creamos un get para sacar los datos de Account
+    @classmethod
+    def get_by_id(cls, id):
+        account = cls.query.get(id)
+        return account
+
+    # Nos creamos l funcion crear cuenta
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
+
 
 #La ForeignKey va en los hijos
 class Client(db.Model):
@@ -40,6 +52,23 @@ class Client(db.Model):
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'))
     ## La realación con el padre
     is_account = db.relationship("Account", backref="client")
+
+    def to_dict(self):
+        #Busca en la labla Account los datos que le estamos indicando
+        client = Account.get_by_id(self.account_id)
+        print(client)
+        return{
+            "id" : self.id,
+            "nick" : self.nick,
+            "email" : client.email,
+            "money" : str(client.money)
+        }
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+
 
 class Business(db.Model):
     __tablename__ = 'business'
