@@ -27,7 +27,7 @@ class Account(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "money" : str(self.money)
+            "money" : str(self.money), 
             # do not serialize the password, its a security breach
         }
     #Metodo para sacar todos los clientes
@@ -49,6 +49,10 @@ class Account(db.Model):
     #Editar los datos id
     def edit_client(self, **kwargs):
         for key,value in kwargs.items():
+            setattr(self, key, value)
+
+        db.session.commit()
+        return self
             
 
 
@@ -78,7 +82,10 @@ class Client(db.Model):
         db.session.add(self)
         db.session.commit()
     
-    
+    @classmethod
+    def get_all(cls):
+        clients = cls.query.all()
+        return clients
 
 
 

@@ -28,36 +28,39 @@ def handle_hello():
 @api.route('/client/<int:id>', methods=['PUT'])
 #@jwt_required() ## requiere instalacion
 def edit_client(id):
-    current_client=account.id
-    
     new_info = { 
-        'email' : request.json.get('email', None)
+        'email' : request.json.get('email', None),
         #money = request.json.get('money', None)
         'password' : request.json.get('password', None)
-        'nick' : request.json.get('nick', None)
+        #'nick' : request.json.get('nick', None)
     }
     account = Account.get_by_id(id)
-    if client:
-        update_client =
-  
+    if account:
+        update_client = account.edit_client(**{
+            key: value for key,value in new_info.items()
+            if value is not None
+        })
+        return jsonify(update_client.to_dict()), 200
+    return {'error': 'Fail no user¡¡'} , 400
 
-@api.route('/client/', methods=['GET'])
-def get_client_all():
+
+@api.route('/account/', methods=['GET'])
+def get_account_all():
     accounts = Account.get_all()
     if accounts:
         accounts_to_dict = [account.to_dict() for account in accounts ]
         return jsonify(accounts_to_dict), 200 
     return jsonify({'error': 'Accounts no fount¡¡¡¡'}), 404
 
-@api.route('/client/<int:id>', methods=['GET'])
-def get_client_id(id):
-    account = Account.get_by_id(id)
-    if account:
-        account_id = account.to_dict()
-        return jsonify(account_id), 200 
-    return jsonify({'error': 'Account no fount¡¡¡¡'}), 404
+@api.route('/client/', methods=['GET'])
+def get_client_all():
+    clients = Client.get_all()
+    if clients:
+        clients_to_dict = [client.to_dict() for client in clients ]
+        return jsonify(clients_to_dict), 200 
+    return jsonify({'error': 'Clients no fount¡¡¡¡'}), 404
 
-@api.route('/client/<int:id>', methods=['PUT'])
+@api.route('/client/<int:id>', methods=['GET'])
 def get_client_id(id):
     account = Account.get_by_id(id)
     if account:
